@@ -1,0 +1,50 @@
+# ===== Android Studio & IntelliJ =====
+*.iml
+.idea/
+.idea/*
+
+# ===== Gradle & Build =====
+.gradle/
+build/
+.externalNativeBuild/
+.cxx/
+gen-external-apklibs/
+output.json
+*.apk
+*.ap_
+
+# ===== Config / Local =====
+local.properties
+
+# ===== OS / 환경 파일 =====
+.DS_Store
+Thumbs.db
+
+# ===== 로그 / 분석 / 힙덤프 =====
+*.log
+*.hprof
+hs_err_pid*
+replay_pid*
+
+# ===== Keystore =====
+*.keystore
+*.jks
+
+# ===== Google / Firebase =====
+google-services.json
+
+# ===== Kotlin / Java =====
+*.class
+*.dex
+
+# ===== 기타 개발환경 =====
+.vscode/
+
+# ===== 패키지 파일 =====
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
