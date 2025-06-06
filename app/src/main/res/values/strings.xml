@@ -3,4 +3,8 @@
 
     <!-- music list -->
     <string name="musicList_title">My Playlist</string>
+
+    <!-- music player -->
+    <string name="musicPlayer_title">Title</string>
+    <string name="musicPlayer_artist">Artist</string>
 </resources>
