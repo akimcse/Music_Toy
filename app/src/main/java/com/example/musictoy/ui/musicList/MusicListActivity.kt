@@ -1,11 +1,13 @@
 package com.example.musictoy.ui.musicList
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musictoy.data.local.Track
 import com.example.musictoy.databinding.ActivityMusicListBinding
+import com.example.musictoy.ui.player.MusicPlayerActivity
 
 class MusicListActivity : AppCompatActivity() {
 
@@ -24,6 +26,10 @@ class MusicListActivity : AppCompatActivity() {
 
         val adapter = MusicAdapter(sampleTracks) { track ->
             Log.d("MusicList", "Clicked track: ${track.title} by ${track.artist}")
+
+            val intent = Intent(this, MusicPlayerActivity::class.java)
+            intent.putExtra("track", track)
+            startActivity(intent)
         }
 
         binding.rvTracks.layoutManager = LinearLayoutManager(this)
