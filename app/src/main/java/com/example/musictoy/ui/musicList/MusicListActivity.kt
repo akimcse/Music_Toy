@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musictoy.data.local.Track
 import com.example.musictoy.databinding.ActivityMusicListBinding
-import com.example.musictoy.ui.musiclist.MusicAdapter
 
 class MusicListActivity : AppCompatActivity() {
 

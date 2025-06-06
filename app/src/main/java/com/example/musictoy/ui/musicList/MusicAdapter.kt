@@ -1,4 +1,4 @@
-package com.example.musictoy.ui.musiclist
+package com.example.musictoy.ui.musicList
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
