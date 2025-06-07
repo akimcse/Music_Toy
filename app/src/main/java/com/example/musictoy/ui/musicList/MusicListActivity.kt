@@ -19,16 +19,18 @@ class MusicListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val sampleTracks = listOf(
-            Track("1", "Aeroplane", "Red Hot Chili Peppers", "https://example.com/image1.jpg", "https://example.com/audio1.mp3"),
-            Track("2", "Cut the Bridge", "Linkin Park", "https://example.com/image2.jpg", "https://example.com/audio2.mp3"),
-            Track("3", "MAMMAMIA", "Måneskin", "https://example.com/image3.jpg", "https://example.com/audio3.mp3")
+            Track("1", "Aeroplane", "Red Hot Chili Peppers", "https://m.media-amazon.com/images/I/71st5w-CYfL._UF1000,1000_QL80_.jpg", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"),
+            Track("2", "Cut the Bridge", "Linkin Park", "https://i1.sndcdn.com/artworks-kILMyOpdKXlP-0-t500x500.jpg", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"),
+            Track("3", "MAMMAMIA", "Måneskin", "https://upload.wikimedia.org/wikipedia/en/e/e5/Måneskin_Mammamia.jpg", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3")
         )
 
-        val adapter = MusicAdapter(sampleTracks) { track ->
+        val adapter = MusicAdapter(sampleTracks) { track, position ->
             Log.d("MusicList", "Clicked track: ${track.title} by ${track.artist}")
 
-            val intent = Intent(this, MusicPlayerActivity::class.java)
-            intent.putExtra("track", track)
+            val intent = Intent(this@MusicListActivity, MusicPlayerActivity::class.java).apply {
+                putParcelableArrayListExtra("track_list", ArrayList(sampleTracks))
+                putExtra("track_index", position)
+            }
             startActivity(intent)
         }
 
