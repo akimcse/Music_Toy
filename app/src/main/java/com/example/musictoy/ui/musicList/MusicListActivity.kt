@@ -24,11 +24,13 @@ class MusicListActivity : AppCompatActivity() {
             Track("3", "MAMMAMIA", "Måneskin", "https://upload.wikimedia.org/wikipedia/en/e/e5/Måneskin_Mammamia.jpg", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3")
         )
 
-        val adapter = MusicAdapter(sampleTracks) { track ->
+        val adapter = MusicAdapter(sampleTracks) { track, position ->
             Log.d("MusicList", "Clicked track: ${track.title} by ${track.artist}")
 
-            val intent = Intent(this, MusicPlayerActivity::class.java)
-            intent.putExtra("track", track)
+            val intent = Intent(this@MusicListActivity, MusicPlayerActivity::class.java).apply {
+                putParcelableArrayListExtra("track_list", ArrayList(sampleTracks))
+                putExtra("track_index", position)
+            }
             startActivity(intent)
         }
 

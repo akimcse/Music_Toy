@@ -9,19 +9,19 @@ import com.example.musictoy.databinding.ItemTrackBinding
 
 class MusicAdapter(
     private val trackList: List<Track>,
-    private val onItemClick: (Track) -> Unit
+    private val onItemClick: (Track, Int) -> Unit
 ) : RecyclerView.Adapter<MusicAdapter.MusicViewHolder>() {
 
     inner class MusicViewHolder(private val binding: ItemTrackBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(track: Track) {
+        fun bind(track: Track, position: Int) {
             binding.tvTitle.text = track.title
             binding.tvArtist.text = track.artist
             Glide.with(binding.root.context).load(track.imageUrl).into(binding.ivAlbumArt)
 
             binding.root.setOnClickListener {
-                onItemClick(track)
+                onItemClick(track, position)
             }
         }
     }
@@ -32,7 +32,7 @@ class MusicAdapter(
     }
 
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
-        holder.bind(trackList[position])
+        holder.bind(trackList[position], position)
     }
 
     override fun getItemCount(): Int = trackList.size

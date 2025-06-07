@@ -14,9 +14,10 @@ import com.example.musictoy.data.local.Track
 import com.example.musictoy.databinding.ActivityMusicPlayerBinding
 
 class MusicPlayerActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMusicPlayerBinding
     private var player: ExoPlayer? = null
+    private lateinit var trackList: List<Track>
+    private var currentIndex: Int = 0
     private lateinit var track: Track
     private val handler = Handler(Looper.getMainLooper())
 
@@ -25,7 +26,9 @@ class MusicPlayerActivity : AppCompatActivity() {
         binding = ActivityMusicPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        track = intent.getParcelableExtra("track") ?: return
+        trackList = intent.getParcelableArrayListExtra("track_list") ?: emptyList()
+        currentIndex = intent.getIntExtra("track_index", 0)
+        track = trackList[currentIndex]
 
         binding.tvTitle.text = track.title
         binding.tvArtist.text = track.artist
