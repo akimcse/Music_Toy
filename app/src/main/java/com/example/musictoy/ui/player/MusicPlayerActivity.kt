@@ -50,24 +50,26 @@ class MusicPlayerActivity : AppCompatActivity() {
     }
 
     private fun initializePlayer() {
-        player = ExoPlayer.Builder(this).build().also { exoPlayer ->
-            binding.playerView.player = exoPlayer
-            val mediaItem = MediaItem.fromUri(track.audioUrl)
-            exoPlayer.setMediaItem(mediaItem)
-            exoPlayer.prepare()
+        player = ExoPlayer.Builder(this).build()
+        binding.playerView.player = player
 
-            player?.addListener(object : Player.Listener {
-                override fun onIsPlayingChanged(isPlaying: Boolean) {
-                    if (isPlaying) {
-                        binding.btnPlay.setImageResource(R.drawable.ic_baseline_pause_24)
-                    } else {
-                        binding.btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-                    }
+        player?.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                binding.btnPlay.setImageResource(
+                    if (isPlaying) R.drawable.ic_baseline_pause_24
+                    else R.drawable.ic_baseline_play_arrow_24
+                )
+            }
+
+            override fun onPlaybackStateChanged(state: Int) {
+                if (state == Player.STATE_ENDED) {
+                    val nextIndex = (currentIndex + 1) % trackList.size
+                    playTrackAt(nextIndex)
                 }
-            })
+            }
+        })
 
-            exoPlayer.playWhenReady = true
-        }
+        playTrackAt(currentIndex)
         startSeekBarUpdate()
     }
 
@@ -123,11 +125,14 @@ class MusicPlayerActivity : AppCompatActivity() {
             Glide.with(this).load(track.imageUrl).into(binding.ivAlbumArt)
 
             // ExoPlayer 트랙 교체
-            player?.let {
+            player?.apply {
+                stop() // 기존 재생 중지
+                clearMediaItems()
+
                 val mediaItem = MediaItem.fromUri(track.audioUrl)
-                it.setMediaItem(mediaItem)
-                it.prepare()
-                it.play()
+                setMediaItem(mediaItem)
+                prepare()
+                play()
                 binding.btnPlay.setImageResource(R.drawable.ic_baseline_pause_24)
             }
         }
