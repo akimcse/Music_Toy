@@ -34,6 +34,16 @@ class MusicPlayerActivity : AppCompatActivity() {
         binding.tvArtist.text = track.artist
         Glide.with(this).load(track.imageUrl).into(binding.ivAlbumArt)
 
+        binding.btnNext.setOnClickListener {
+            val nextIndex = (currentIndex + 1) % trackList.size
+            playTrackAt(nextIndex)
+        }
+
+        binding.btnPrev.setOnClickListener {
+            val prevIndex = if (currentIndex - 1 < 0) trackList.size - 1 else currentIndex - 1
+            playTrackAt(prevIndex)
+        }
+
         initializePlayer()
         initPlayPauseButton()
         initSeekBar()
@@ -101,6 +111,28 @@ class MusicPlayerActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun playTrackAt(index: Int) {
+        if (index in trackList.indices) {
+            currentIndex = index
+            track = trackList[currentIndex]
+
+            // UI 반영
+            binding.tvTitle.text = track.title
+            binding.tvArtist.text = track.artist
+            Glide.with(this).load(track.imageUrl).into(binding.ivAlbumArt)
+
+            // ExoPlayer 트랙 교체
+            player?.let {
+                val mediaItem = MediaItem.fromUri(track.audioUrl)
+                it.setMediaItem(mediaItem)
+                it.prepare()
+                it.play()
+                binding.btnPlay.setImageResource(R.drawable.ic_baseline_pause_24)
+            }
+        }
+    }
+
 
     override fun onStop() {
         super.onStop()
