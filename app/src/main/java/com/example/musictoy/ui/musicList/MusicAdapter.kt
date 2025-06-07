@@ -3,6 +3,7 @@ package com.example.musictoy.ui.musicList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.musictoy.data.local.Track
 import com.example.musictoy.databinding.ItemTrackBinding
 
@@ -17,6 +18,7 @@ class MusicAdapter(
         fun bind(track: Track) {
             binding.tvTitle.text = track.title
             binding.tvArtist.text = track.artist
+            Glide.with(binding.root.context).load(track.imageUrl).into(binding.ivAlbumArt)
 
             binding.root.setOnClickListener {
                 onItemClick(track)
