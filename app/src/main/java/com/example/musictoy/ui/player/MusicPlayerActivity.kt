@@ -30,14 +30,22 @@ class MusicPlayerActivity : AppCompatActivity() {
         currentIndex = intent.getIntExtra("track_index", 0)
 
         binding.btnNext.setOnClickListener {
-            player?.seekTo((currentIndex + 1) % trackList.size, 0L)
+            val nextIndex = if (playMode == PlayMode.SHUFFLE) {
+                getShuffledIndex()
+            } else {
+                (currentIndex + 1) % trackList.size
+            }
+            player?.seekTo(nextIndex, 0L)
         }
 
         binding.btnPrev.setOnClickListener {
-            val prevIndex = if (currentIndex - 1 < 0) trackList.size - 1 else currentIndex - 1
+            val prevIndex = if (playMode == PlayMode.SHUFFLE) {
+                getShuffledIndex()
+            } else {
+                if (currentIndex - 1 < 0) trackList.size - 1 else currentIndex - 1
+            }
             player?.seekTo(prevIndex, 0L)
         }
-
         binding.btnPlayMode.setOnClickListener {
             playMode = playMode.next()
             updatePlayModeIcon()
@@ -153,6 +161,11 @@ class MusicPlayerActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun getShuffledIndex(): Int {
+        val indices = trackList.indices.toMutableList().apply { remove(currentIndex) }
+        return indices.random()
     }
 
     override fun onStop() {
