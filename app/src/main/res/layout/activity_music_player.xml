@@ -54,13 +54,24 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
+            android:id="@+id/btnEmpty"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="invisible"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageButton
             android:id="@+id/btnPrev"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginStart="50dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_baseline_skip_previous_24"
             android:contentDescription="이전 곡"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnEmpty"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -68,8 +79,8 @@
             android:id="@+id/btnPlay"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_baseline_play_arrow_24"
             android:contentDescription="재생/일시정지"
@@ -82,13 +93,27 @@
             android:id="@+id/btnNext"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginEnd="50dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_baseline_skip_next_24"
             android:contentDescription="다음 곡"
+            app:layout_constraintEnd_toStartOf="@id/btnPlayMode"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnPlayMode"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_baseline_repeat_24"
+            android:contentDescription="재생 모드 전환"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <SeekBar
         android:id="@+id/seekBar"
