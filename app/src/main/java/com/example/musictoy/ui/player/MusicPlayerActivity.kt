@@ -16,6 +16,7 @@ import com.example.musictoy.databinding.ActivityMusicPlayerBinding
 class MusicPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMusicPlayerBinding
     private var player: ExoPlayer? = null
+    private lateinit var track: Track
     private lateinit var trackList: List<Track>
     private var currentIndex: Int = 0
     private var playMode: PlayMode = PlayMode.REPEAT_ALL
@@ -50,6 +51,11 @@ class MusicPlayerActivity : AppCompatActivity() {
             playMode = playMode.next()
             updatePlayModeIcon()
             applyPlayModeToPlayer()
+        }
+
+        binding.btnLiked.setOnClickListener {
+            track.isLiked = !track.isLiked
+            updateLikeIcon()
         }
 
         initializePlayer()
@@ -88,10 +94,20 @@ class MusicPlayerActivity : AppCompatActivity() {
     }
 
     private fun updateTrackUI() {
-        val track = trackList.getOrNull(currentIndex) ?: return
+        track = trackList.getOrNull(currentIndex) ?: return
         binding.tvTitle.text = track.title
         binding.tvArtist.text = track.artist
         Glide.with(this).load(track.imageUrl).into(binding.ivAlbumArt)
+        updateLikeIcon()
+    }
+
+    private fun updateLikeIcon() {
+        val iconResId = if (track.isLiked) {
+            R.drawable.ic_baseline_favorite_24
+        } else {
+            R.drawable.ic_baseline_favorite_border_24
+        }
+        binding.btnLiked.setImageResource(iconResId)
     }
 
     private fun initPlayPauseButton() {
