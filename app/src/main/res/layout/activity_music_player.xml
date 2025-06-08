@@ -54,11 +54,12 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
-            android:id="@+id/btnEmpty"
+            android:id="@+id/btnLiked"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:visibility="invisible"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_baseline_favorite_border_24"
+            android:contentDescription="좋아요"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
@@ -71,7 +72,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_baseline_skip_previous_24"
             android:contentDescription="이전 곡"
-            app:layout_constraintStart_toEndOf="@id/btnEmpty"
+            app:layout_constraintStart_toEndOf="@id/btnLiked"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
