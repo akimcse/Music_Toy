@@ -9,10 +9,14 @@ import com.example.musictoy.data.local.Track
 import com.example.musictoy.databinding.ItemTrackBinding
 
 class MusicAdapter(
-    private val trackList: List<Track>,
+    private var trackList: List<Track>,
     private val onTrackClick: (Track, Int) -> Unit,
-    private val onLikeClick: (Track) -> Unit
+    private val onLikeClick: (Track, Int) -> Unit
 ) : RecyclerView.Adapter<MusicAdapter.MusicViewHolder>() {
+    fun updateList(newTracks: List<Track>) {
+        this.trackList = newTracks
+        notifyDataSetChanged()
+    }
 
     inner class MusicViewHolder(private val binding: ItemTrackBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -34,7 +38,7 @@ class MusicAdapter(
             binding.btnLike.setImageResource(iconRes)
 
             binding.btnLike.setOnClickListener {
-                onLikeClick(track)
+                onLikeClick(track, position)
                 notifyItemChanged(adapterPosition)
             }
         }
