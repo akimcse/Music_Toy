@@ -24,15 +24,19 @@ class MusicListActivity : AppCompatActivity() {
             Track("3", "MAMMAMIA", "Måneskin", "https://upload.wikimedia.org/wikipedia/en/e/e5/Måneskin_Mammamia.jpg", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3")
         )
 
-        val adapter = MusicAdapter(sampleTracks) { track, position ->
-            Log.d("MusicList", "Clicked track: ${track.title} by ${track.artist}")
-
-            val intent = Intent(this@MusicListActivity, MusicPlayerActivity::class.java).apply {
-                putParcelableArrayListExtra("track_list", ArrayList(sampleTracks))
-                putExtra("track_index", position)
+        val adapter = MusicAdapter(
+            sampleTracks,
+            onTrackClick = { _, position ->
+                val intent = Intent(this@MusicListActivity, MusicPlayerActivity::class.java).apply {
+                    putParcelableArrayListExtra("track_list", ArrayList(sampleTracks))
+                    putExtra("track_index", position)
+                }
+                startActivity(intent)
+            },
+            onLikeClick = { track ->
+                track.isLiked = !track.isLiked
             }
-            startActivity(intent)
-        }
+        )
 
         binding.rvTracks.layoutManager = LinearLayoutManager(this)
         binding.rvTracks.adapter = adapter
