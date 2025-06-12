@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.SeekBar
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -12,12 +13,13 @@ import com.bumptech.glide.Glide
 import com.example.musictoy.R
 import com.example.musictoy.data.local.Track
 import com.example.musictoy.databinding.ActivityMusicPlayerBinding
+import com.example.musictoy.ui.TrackViewModel
 
 class MusicPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMusicPlayerBinding
+    private val viewModel: TrackViewModel by viewModels()
     private var player: ExoPlayer? = null
     private lateinit var track: Track
-    private lateinit var trackList: List<Track>
     private var currentIndex: Int = 0
     private var playMode: PlayMode = PlayMode.REPEAT_ALL
     private val handler = Handler(Looper.getMainLooper())
@@ -27,48 +29,57 @@ class MusicPlayerActivity : AppCompatActivity() {
         binding = ActivityMusicPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        trackList = intent.getParcelableArrayListExtra("track_list") ?: emptyList()
         currentIndex = intent.getIntExtra("track_index", 0)
 
+        viewModel.trackList.observe(this) { list ->
+            if (list.isNotEmpty()) {
+                track = list[currentIndex]
+                initializePlayer()
+                updateTrackUI()
+            }
+        }
+
+        binding.btnLiked.setOnClickListener {
+            viewModel.toggleLike(track)
+            updateLikeIcon()
+        }
+
         binding.btnNext.setOnClickListener {
+            val listSize = viewModel.trackList.value?.size ?: return@setOnClickListener
             val nextIndex = if (playMode == PlayMode.SHUFFLE) {
-                getShuffledIndex()
+                getShuffledIndex(listSize)
             } else {
-                (currentIndex + 1) % trackList.size
+                (currentIndex + 1) % listSize
             }
             player?.seekTo(nextIndex, 0L)
         }
 
         binding.btnPrev.setOnClickListener {
+            val listSize = viewModel.trackList.value?.size ?: return@setOnClickListener
             val prevIndex = if (playMode == PlayMode.SHUFFLE) {
-                getShuffledIndex()
+                getShuffledIndex(listSize)
             } else {
-                if (currentIndex - 1 < 0) trackList.size - 1 else currentIndex - 1
+                if (currentIndex - 1 < 0) listSize - 1 else currentIndex - 1
             }
             player?.seekTo(prevIndex, 0L)
         }
+
         binding.btnPlayMode.setOnClickListener {
             playMode = playMode.next()
             updatePlayModeIcon()
             applyPlayModeToPlayer()
         }
 
-        binding.btnLiked.setOnClickListener {
-            track.isLiked = !track.isLiked
-            updateLikeIcon()
-        }
-
-        initializePlayer()
         initPlayPauseButton()
         initSeekBar()
         updatePlayModeIcon()
     }
 
     private fun initializePlayer() {
+        val mediaItems = viewModel.trackList.value?.map { MediaItem.fromUri(it.audioUrl) } ?: return
+
         player = ExoPlayer.Builder(this).build().also { exoPlayer ->
             binding.playerView.player = exoPlayer
-
-            val mediaItems = trackList.map { MediaItem.fromUri(it.audioUrl) }
             exoPlayer.setMediaItems(mediaItems, currentIndex, 0L)
             exoPlayer.prepare()
             applyPlayModeToPlayer()
@@ -89,12 +100,11 @@ class MusicPlayerActivity : AppCompatActivity() {
             })
         }
 
-        updateTrackUI()
         startSeekBarUpdate()
     }
 
     private fun updateTrackUI() {
-        track = trackList.getOrNull(currentIndex) ?: return
+        track = viewModel.trackList.value?.getOrNull(currentIndex) ?: return
         binding.tvTitle.text = track.title
         binding.tvArtist.text = track.artist
         Glide.with(this).load(track.imageUrl).into(binding.ivAlbumArt)
@@ -102,7 +112,7 @@ class MusicPlayerActivity : AppCompatActivity() {
     }
 
     private fun updateLikeIcon() {
-        val iconResId = if (track.isLiked) {
+        val iconResId = if (viewModel.isLiked(track)) {
             R.drawable.ic_baseline_favorite_24
         } else {
             R.drawable.ic_baseline_favorite_border_24
@@ -179,8 +189,8 @@ class MusicPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun getShuffledIndex(): Int {
-        val indices = trackList.indices.toMutableList().apply { remove(currentIndex) }
+    private fun getShuffledIndex(size: Int): Int {
+        val indices = (0 until size).toMutableList().apply { remove(currentIndex) }
         return indices.random()
     }
 
