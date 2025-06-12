@@ -39,7 +39,10 @@ class MusicAdapter(
 
             binding.btnLike.setOnClickListener {
                 onLikeClick(track, position)
-                notifyItemChanged(adapterPosition)
+                val pos = absoluteAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    notifyItemChanged(pos)
+                }
             }
         }
     }
